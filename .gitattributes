@@ -1,0 +1,12 @@
+*.zip filter=lfs diff=lfs merge=lfs -text
+bio_2-5m_bil.zip filter=lfs diff=lfs merge=lfs -text
+cc26bi50.zip filter=lfs diff=lfs merge=lfs -text
+cc26bi70.zip filter=lfs diff=lfs merge=lfs -text
+cc45bi50.zip filter=lfs diff=lfs merge=lfs -text
+cc45bi70.zip filter=lfs diff=lfs merge=lfs -text
+cc60bi50.zip filter=lfs diff=lfs merge=lfs -text
+cc60bi70.zip filter=lfs diff=lfs merge=lfs -text
+cc85bi50.zip filter=lfs diff=lfs merge=lfs -text
+cc85bi70.zip filter=lfs diff=lfs merge=lfs -text
+cclgmbi_2-5m.zip filter=lfs diff=lfs merge=lfs -text
+ccmidbi_2-5m.zip filter=lfs diff=lfs merge=lfs -text

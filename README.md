@@ -1,5 +1,7 @@
 # rbioclim: Improved getData function from the raster R package to interact with past, present and future climate data from worldclim.org. 
 
+*Need to update the package to v2. There might be building problems!*
+
 All the data retrieved by this package is publicly available at worldclim.org, so visit the page for details and new releases.
 
 Cite the data as:

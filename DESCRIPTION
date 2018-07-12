@@ -1,10 +1,8 @@
 Package: rbioclim
 Title: rbioclim: Improved getData function from the raster R package to interact with past, present and future climate data from worldclim.org 
 Version: 0.0.0.9000
-Authors@R: person("Moises", "Exposito-Alonso", email = "moisesexpositoalonso@gmail.com", role = c("aut", "cre"))
-Description: This package allows you to download and manipulate data from the
-last glacial maxima (22 kyears ago), mid-holocene (6 kyears ago), present
-(1969-1990), and future (2050, 2070 at four CO2 concentration scennarios). It is based on the getData function from the raster package. 
+Authors@R: person("Moises", "Exposito-Alonso", email = "moisesexpositoalonso@gmail.com", role = c("aut", "cre")) 
+Description: This package allows you to download and manipulate data from the last glacial maxima (22 kyears ago), mid-holocene (6 kyears ago), present (1969-1990), and future (2050, 2070 at four CO2 concentration scennarios). It is based on the getData function from the raster package. 
 Depends: R (>= 3.2.0)
 Imports:
     raster,

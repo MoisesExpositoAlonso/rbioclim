@@ -295,7 +295,9 @@ ccodes <- function() {
 			if (download) {
 		  	message("trying to download from ",theurl)
 
-				.download(theurl, zipfile,downloadmethod="wget")
+				#.download(theurl, zipfile,downloadmethod="wget")# ********* edited
+        #this nov 20
+				.download(theurl, zipfile,downloadmethod="auto")
 				if (!file.exists(zipfile))	{ 
 					message("\n Could not download file -- perhaps it does not exist") 
 				}

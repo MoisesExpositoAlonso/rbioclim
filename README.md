@@ -1,6 +1,6 @@
 # rbioclim: Improved getData function from the raster R package to interact with past, present and future climate data from worldclim.org. 
 
-*Need to update the package to v2. There might be building problems!*
+*Need to update the package to downlod v2 of worldclim*
 
 All the data retrieved by this package is publicly available at worldclim.org, so visit the page for details and new releases.
 
@@ -19,7 +19,7 @@ moisesexpositoalonso@gmail.com
 
 The motivation of this package is to have a rapid access to all time layers available at worldclim.org (needed it for my analyses).
 
-The package includes an improved getData function from the rater package that not only allows the tipical import of present data or IPCC5 daata (2050 & 2070 future), but also the last glacial maxima and mid-holocene datasets. It also includes several wrapper functions to download all available datasets at worldclim with a single command.
+The package includes an improved getData function from the rater package that not only allows the tipical import of present data or IPCC5 daata (2050 & 2070 future), but also the last glacial maxima and mid-holocene datasets (which to my knowledge cannot be downloaded throught the getData function of package raster). It also includes several wrapper functions to download all available datasets at worldclim with a single command.
 
 
 ## How to ...

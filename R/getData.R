@@ -41,8 +41,8 @@ getData <- function(name='GADM', download=TRUE, path='', ...) {
 	if (res == 0) {
 		w <- getOption('warn')
 		on.exit(options('warn' = w))
-		options('warn'=-1) 
-		if (! file.rename(fn, filename) ) { 
+		options('warn'=-1)
+		if (! file.rename(fn, filename) ) {
 			# rename failed, perhaps because fn and filename refer to different devices
 			file.copy(fn, filename)
 			file.remove(fn)
@@ -105,7 +105,7 @@ ccodes <- function() {
 		path <- .dataloc()
 	} else {
 		if (substr(path, .nchar(path)-1, .nchar(path)) == '//' ) {
-			p <- substr(path, 1, .nchar(path)-2)		
+			p <- substr(path, 1, .nchar(path)-2)
 		} else if (substr(path, .nchar(path), .nchar(path)) == '/'  | substr(path, .nchar(path), .nchar(path)) == '\\') {
 			p <- substr(path, 1, .nchar(path)-1)
 		} else {
@@ -129,26 +129,26 @@ ccodes <- function() {
 	if (missing(level)) {
 		stop('provide a "level=" argument; levels can be 0, 1, or 2 for most countries, and higher for some')
 	}
-	
+
 	filename <- paste(path, 'GADM_', version, '_', country, '_adm', level, ".rds", sep="")
 	if (!file.exists(filename)) {
 		if (download) {
-		
+
 			baseurl <- paste0("http://biogeo.ucdavis.edu/data/gadm", version)
 			if (version == 2) {
 				theurl <- paste(baseurl, '/R/', country, '_adm', level, ".RData", sep="")
 			} else {
-				theurl <- paste(baseurl, '/rds/', country, '_adm', level, ".rds", sep="")			
+				theurl <- paste(baseurl, '/rds/', country, '_adm', level, ".rds", sep="")
 			}
-			
+
 			.download(theurl, filename)
-			if (!file.exists(filename))	{ 
-				message("\nCould not download file -- perhaps it does not exist") 
+			if (!file.exists(filename))	{
+				message("\nCould not download file -- perhaps it does not exist")
 			}
 		} else {
 			message("File not available locally. Use 'download = TRUE'")
 		}
-	}	
+	}
 	if (file.exists(filename)) {
 		if (version == 2) {
 			thisenvir <- new.env()
@@ -171,18 +171,18 @@ ccodes <- function() {
 			theurl <- paste("http://biogeo.ucdavis.edu/data/gadm2.6/countries_gadm26.rds", sep="")
 			.download(theurl, filename)
 			if (!file.exists(filename)) {
-				message("\nCould not download file -- perhaps it does not exist") 
+				message("\nCould not download file -- perhaps it does not exist")
 			}
 		} else {
 			message("File not available locally. Use 'download = TRUE'")
 		}
-	}	
+	}
 	if (file.exists(filename)) {
 		#thisenvir = new.env()
 		#data <- get(load(filename, thisenvir), thisenvir)
 		data <- readRDS(filename)
 		return(data)
-	} 
+	}
 }
 
 
@@ -190,34 +190,34 @@ ccodes <- function() {
 	if (!res %in% c(0.5, 2.5, 5, 10)) {
 		stop('resolution should be one of: 2.5, 5, 10')
 	}
-	if (res==2.5) { 
-		res <- '2_5m' 
+	if (res==2.5) {
+		res <- '2_5m'
     } else if (res == 0.5) {
         res <- "30s"
     } else {
 		res <- paste(res, 'm', sep='')
 	}
-	
+
 	var <- tolower(var[1])
 	vars <- c('tmin', 'tmax', 'prec', 'bio')
 	stopifnot(var %in% vars)
 	var <- c('tn', 'tx', 'pr', 'bi')[match(var, vars)]
-	
+
 	model <- toupper(model)
 	models <- c('AC', 'BC', 'CC', 'CE', 'CN', 'GF', 'GD', 'GS', 'HD', 'HG', 'HE', 'IN', 'IP', 'MI', 'MR', 'MC', 'MP', 'MG', 'NO')
 	stopifnot(model %in% models)
-	
+
 	rcps <- c(26, 45, 60, 85)
 	stopifnot(rcp %in% rcps)
 	stopifnot(year %in% c(50, 70))
-	
+
 	m <- matrix(c(0,1,1,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,0,1,0,1,1,1,0,0,1,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1), ncol=4)
 	i <- m[which(model==models), which(rcp==rcps)]
 	if (!i) {
 		warning('this combination of rcp and model is not available')
 		return(invisible(NULL))
 	}
-	
+
 	path <- paste(path, '/cmip5/', res, '/', sep='')
 	dir.create(path, recursive=TRUE, showWarnings=FALSE)
 
@@ -237,16 +237,16 @@ ccodes <- function() {
 		if (!file.exists(zipfile)) {
 			if (download) {
 				.download(theurl, zipfile)
-				if (!file.exists(zipfile))	{ 
-					message("\n Could not download file -- perhaps it does not exist") 
+				if (!file.exists(zipfile))	{
+					message("\n Could not download file -- perhaps it does not exist")
 				}
 			} else {
 				message("File not available locally. Use 'download = TRUE'")
 			}
-		}	
+		}
 		utils::unzip(zipfile, exdir=dirname(zipfile))
 	}
-	stack(paste(path, tifs, sep=''))
+	raster::stack(paste(path, tifs, sep=''))
 }
 
 #.cmip5(var='prec', model='BC', rcp=26, year=50, res=10, path=getwd())
@@ -255,20 +255,20 @@ ccodes <- function() {
 	if (!res %in% c(2.5, 5, 10)) {
 		stop('resolution should be one of: 2.5, 5, 10')
 	}
-  
+
   vars <- c('tmin', 'tmax', 'prec', 'bio')
   if(!var %in% vars){
     stop('the variables available are: minimum temp (tn), maximum temp (tx), montly precipitation (pr), bioclimatic variables (bi)')
     }
 	var <- c('tn', 'tx', 'pr', 'bi')[match(var, vars)]
 
-	
+
   if(!past %in% c("lgm", "mid")){
     stop('the past times available are: last glacial maxima (lgm), mid-holocene (mid)')
   }
-  
+
   if (res==2.5) { res <- '2-5' }
-  
+
 	path <- paste(path, past,var, '_', res, '/', sep='')
 	message("raw data in ",path)
 
@@ -276,20 +276,20 @@ ccodes <- function() {
 
   	zip <- paste("cc",past,var, '_', res, 'm.zip', sep='')
   	zipfile <- paste(path, zip, sep='')
-		
+
   	theurl <- paste0("http://biogeo.ucdavis.edu/data/climate/cmip5/",past,"/",zip)
-	
+
 		if (var  != 'bio') {
 		  tiffiles <- paste0("cc",past,var,1:12,".tif")
 		} else {
 		  tiffiles <- paste0("cc",past,var,1:19,".tif")
 		}
 
-	
+
 	files <- paste(path, tiffiles, sep='')
-	
+
 	fc <- sum(file.exists(files))
-	
+
 	if ( fc < length(files) ) {
 		if (!file.exists(zipfile)) {
 			if (download) {
@@ -298,20 +298,20 @@ ccodes <- function() {
 				#.download(theurl, zipfile,downloadmethod="wget")# ********* edited
         #this nov 20
 				.download(theurl, zipfile,downloadmethod="auto")
-				if (!file.exists(zipfile))	{ 
-					message("\n Could not download file -- perhaps it does not exist") 
+				if (!file.exists(zipfile))	{
+					message("\n Could not download file -- perhaps it does not exist")
 				}
 			} else {
 				message("File not available locally. Use 'download = TRUE'")
 			}
-		}	
+		}
 		utils::unzip(zipfile, exdir=dirname(zipfile))
-		
-		
+
+
 	}
 
-	st <- stack(paste0(path, tiffiles))
-	
+	st <- raster::stack(paste0(path, tiffiles))
+
 	projection(st) <- "+proj=longlat +datum=WGS84"
 	return(st)
 }
@@ -322,7 +322,7 @@ ccodes <- function() {
 		stop('resolution should be one of: 0.5, 2.5, 5, 10')
 	}
 	if (res==2.5) { res <- '2-5' }
-  
+
 	stopifnot(var %in% c('tmean', 'tmin', 'tmax', 'prec', 'bio', 'alt'))
 	path <- paste(path, 'wc', res, '/', sep='')
 	dir.create(path, showWarnings=FALSE)
@@ -333,18 +333,18 @@ ccodes <- function() {
 		rs <- raster(nrows=5, ncols=12, xmn=-180, xmx=180, ymn=-60, ymx=90 )
 		row <- rowFromY(rs, lat) - 1
 		col <- colFromX(rs, lon) - 1
-		rc <- paste(row, col, sep='') 
+		rc <- paste(row, col, sep='')
 		zip <- paste(var, '_', rc, '.zip', sep='')
 		zipfile <- paste(path, zip, sep='')
 		if (var  == 'alt') {
 			bilfiles <- paste(var, '_', rc, '.bil', sep='')
-			hdrfiles <- paste(var, '_', rc, '.hdr', sep='')			
+			hdrfiles <- paste(var, '_', rc, '.hdr', sep='')
 		} else if (var  != 'bio') {
 			bilfiles <- paste(var, 1:12, '_', rc, '.bil', sep='')
 			hdrfiles <- paste(var, 1:12, '_', rc, '.hdr', sep='')
 		} else {
 			bilfiles <- paste(var, 1:19, '_', rc, '.bil', sep='')
-			hdrfiles <- paste(var, 1:19, '_', rc, '.hdr', sep='')		
+			hdrfiles <- paste(var, 1:19, '_', rc, '.hdr', sep='')
 		}
 		theurl <- paste('http://biogeo.ucdavis.edu/data/climate/worldclim/1_4/tiles/cur/', zip, sep='')
 	} else {
@@ -352,31 +352,31 @@ ccodes <- function() {
 		zipfile <- paste(path, zip, sep='')
 		if (var  == 'alt') {
 			bilfiles <- paste(var, '.bil', sep='')
-			hdrfiles <- paste(var, '.hdr', sep='')			
+			hdrfiles <- paste(var, '.hdr', sep='')
 		} else if (var  != 'bio') {
 			bilfiles <- paste(var, 1:12, '.bil', sep='')
 			hdrfiles <- paste(var, 1:12, '.hdr', sep='')
 		} else {
 			bilfiles <- paste(var, 1:19, '.bil', sep='')
-			hdrfiles <- paste(var, 1:19, '.hdr', sep='')	
+			hdrfiles <- paste(var, 1:19, '.hdr', sep='')
 		}
 		theurl <- paste('http://biogeo.ucdavis.edu/data/climate/worldclim/1_4/grid/cur/', zip, sep='')
 	}
 	files <- c(paste(path, bilfiles, sep=''), paste(path, hdrfiles, sep=''))
 	fc <- sum(file.exists(files))
-	
-	
+
+
 	if ( fc < length(files) ) {
 		if (!file.exists(zipfile)) {
 			if (download) {
 				.download(theurl, zipfile)
-				if (!file.exists(zipfile))	{ 
-					message("\n Could not download file -- perhaps it does not exist") 
+				if (!file.exists(zipfile))	{
+					message("\n Could not download file -- perhaps it does not exist")
 				}
 			} else {
 				message("File not available locally. Use 'download = TRUE'")
 			}
-		}	
+		}
 		utils::unzip(zipfile, exdir=dirname(zipfile))
 		for (h in paste(path, hdrfiles, sep='')) {
 			x <- readLines(h)
@@ -387,7 +387,7 @@ ccodes <- function() {
 	if (var  == 'alt') {
 		st <- raster(paste(path, bilfiles, sep=''))
 	} else {
-		st <- stack(paste(path, bilfiles, sep=''))
+		st <- raster::stack(paste(path, bilfiles, sep=''))
 	}
 	projection(st) <- "+proj=longlat +datum=WGS84"
 	return(st)
@@ -403,7 +403,7 @@ ccodes <- function() {
 		mskpath <- 'msk_'
 	} else {
 		mskname<-'_'
-		mskpath <- ''		
+		mskpath <- ''
 	}
 	filename <- paste(path, country, mskname, name, ".grd", sep="")
 	if (!file.exists(filename)) {
@@ -413,8 +413,8 @@ ccodes <- function() {
 			if (download) {
 				theurl <- paste("http://biogeo.ucdavis.edu/data/diva/", mskpath, name, "/", country, mskname, name, ".zip", sep="")
 				.download(theurl, zipfilename)
-				if (!file.exists(zipfilename))	{ 
-					message("\nCould not download file -- perhaps it does not exist") 
+				if (!file.exists(zipfilename))	{
+					message("\nCould not download file -- perhaps it does not exist")
 				}
 			} else {
 				message("File not available locally. Use 'download = TRUE'")
@@ -424,8 +424,8 @@ ccodes <- function() {
 		if (!keepzip) {
 			file.remove(zipfilename)
 		}
-	}	
-	if (file.exists(filename)) { 
+	}
+	if (file.exists(filename)) {
 		rs <- raster(filename)
 	} else {
 		#patrn <- paste(country, '.', mskname, name, ".grd", sep="")
@@ -443,7 +443,7 @@ ccodes <- function() {
 		}
 	}
 	projection(rs) <- "+proj=longlat +datum=WGS84"
-	return(rs)	
+	return(rs)
 }
 
 
@@ -451,20 +451,20 @@ ccodes <- function() {
 .SRTM <- function(lon, lat, download, path) {
 	stopifnot(lon >= -180 & lon <= 180)
 	stopifnot(lat >= -60 & lat <= 60)
-	
+
 	rs <- raster(nrows=24, ncols=72, xmn=-180, xmx=180, ymn=-60, ymx=60 )
 	rowTile <- rowFromY(rs, lat)
 	colTile <- colFromX(rs, lon)
 	if (rowTile < 10) { rowTile <- paste('0', rowTile, sep='') }
 	if (colTile < 10) { colTile <- paste('0', colTile, sep='') }
-	
+
 	f <- paste('srtm_', colTile, '_', rowTile, sep="")
 	zipfilename <- paste(path, "/", f, ".ZIP", sep="")
 	tiffilename <- paste(path, "/", f, ".TIF", sep="")
-	
+
 	if (!file.exists(tiffilename)) {
 		if (!file.exists(zipfilename)) {
-			if (download) { 
+			if (download) {
 				theurl <- paste("ftp://xftp.jrc.it/pub/srtmV4/tiff/", f, ".zip", sep="")
 				test <- try (.download(theurl, zipfilename) , silent=TRUE)
 				if (class(test) == 'try-error') {
@@ -475,14 +475,14 @@ ccodes <- function() {
 						.download(theurl, zipfilename)
 					}
 				}
-			} else {message('file not available locally, use download=TRUE') }	
+			} else {message('file not available locally, use download=TRUE') }
 		}
-		if (file.exists(zipfilename)) { 
+		if (file.exists(zipfilename)) {
 			utils::unzip(zipfilename, exdir=dirname(zipfilename))
 			file.remove(zipfilename)
-		}	
+		}
 	}
-	if (file.exists(tiffilename)) { 
+	if (file.exists(tiffilename)) {
 		rs <- raster(tiffilename)
 		projection(rs) <- "+proj=longlat +datum=WGS84"
 		return(rs)

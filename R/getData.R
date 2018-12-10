@@ -279,7 +279,7 @@ ccodes <- function() {
 
   	theurl <- paste0("http://biogeo.ucdavis.edu/data/climate/cmip5/",past,"/",zip)
 
-		if (var  != 'bio') {
+		if (var  != 'bi') {
 		  tiffiles <- paste0("cc",past,var,1:12,".tif")
 		} else {
 		  tiffiles <- paste0("cc",past,var,1:19,".tif")
@@ -310,7 +310,8 @@ ccodes <- function() {
 
 	}
 
-	st <- raster::stack(paste0(path, tiffiles))
+  #st <- raster::stack(paste0(path, tiffiles))
+  st <- raster::stack(files)
 
 	projection(st) <- "+proj=longlat +datum=WGS84"
 	return(st)

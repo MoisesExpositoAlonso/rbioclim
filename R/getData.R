@@ -315,7 +315,7 @@ ccodes <- function() {
   #st <- raster::stack(paste0(path, tiffiles))
   st <- raster::stack(files)
 
-	projection(st) <- "+proj=longlat +datum=WGS84"
+  raster::projection(st) <- "+proj=longlat +datum=WGS84"
 	return(st)
 }
 
@@ -392,7 +392,7 @@ ccodes <- function() {
 	} else {
 		st <- raster::stack(paste(path, bilfiles, sep=''))
 	}
-	projection(st) <- "+proj=longlat +datum=WGS84"
+	raster::projection(st) <- "+proj=longlat +datum=WGS84"
 	return(st)
 }
 
@@ -479,7 +479,7 @@ ccodes <- function() {
   } else {
     st <- raster::stack(paste(path, tiffiles, sep=''))
   }
-  projection(st) <- "+proj=longlat +datum=WGS84"
+  raster::projection(st) <- "+proj=longlat +datum=WGS84"
   return(st)
 }
 
@@ -574,7 +574,7 @@ ccodes <- function() {
 	}
 	if (file.exists(tiffilename)) {
 		rs <- raster(tiffilename)
-		projection(rs) <- "+proj=longlat +datum=WGS84"
+		raster::projection(rs) <- "+proj=longlat +datum=WGS84"
 		return(rs)
 	} else {
 		stop('file not found')

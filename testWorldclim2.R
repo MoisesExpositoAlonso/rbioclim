@@ -6,6 +6,7 @@ install_github("MoisesExpositoAlonso/rbioclim")
 library(rbioclim)
 # devtools::load_all(".")
 
-r<-.worldclim2(var='wind',res = 10,path = '~/')
+r<-rbioclim::getData(name = 'worldclim2',res=5,var='bio')
 dim(r)
 plot(r[[1]])
+projec

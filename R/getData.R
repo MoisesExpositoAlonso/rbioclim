@@ -18,6 +18,8 @@ getData <- function(name='GADM', download=TRUE, path='', ...) {
 		.raster(..., name=name, download=download, path=path)
 	} else if (name=='worldclim') {
 		.worldclim(..., download=download, path=path)
+	} else if (name=='worldclim2') {
+	  .worldclim2(..., download=download, path=path)
 	} else if (name=='worldclim_past') {
 		.worldclim_past(..., download=download, path=path)
 	} else if (name=='CMIP5') {
@@ -392,6 +394,93 @@ ccodes <- function() {
 	}
 	projection(st) <- "+proj=longlat +datum=WGS84"
 	return(st)
+}
+
+.worldclim2 <- function(var, res, lon, lat, path, download=TRUE) {
+  if (!res %in% c(0.5, 2.5, 5, 10)) {
+    stop('resolution should be one of: 0.5, 2.5, 5, 10')
+  }
+  if (res==2.5) { res <- '2-5' }
+
+  stopifnot(var %in% c('tmean', 'tmin', 'tmax', 'prec', 'bio', 'elev','srad','wind','vapr'))
+  path <- paste(path, 'wc2.1_', res, '/', sep='')
+  dir.create(path, showWarnings=FALSE)
+
+  if (res==0.5) {
+    lon <- min(180, max(-180, lon))
+    lat <- min(90, max(-60, lat))
+    rs <- raster(nrows=5, ncols=12, xmn=-180, xmx=180, ymn=-60, ymx=90 )
+    row <- rowFromY(rs, lat) - 1
+    col <- colFromX(rs, lon) - 1
+    rc <- paste(row, col, sep='')
+    # zip <- paste(var, '_', rc, '.zip', sep='')
+    # zip <- paste('wc2.1_', rc, 's_', var,'.zip', sep='')
+    zip <- paste('wc2.1_', '30s_', var,'.zip', sep='')
+    zipfile <- paste(path, zip, sep='')
+    if (var  == 'alt') {
+      bilfiles <- paste(var, '_', rc, '.bil', sep='')
+      hdrfiles <- paste(var, '_', rc, '.hdr', sep='')
+    } else if (var  != 'bio') {
+      # bilfiles <- paste(var, 1:12, '_', rc, '.bil', sep='')
+      # hdrfiles <- paste(var, 1:12, '_', rc, '.hdr', sep='')
+      numberswithzero<-gsub(format(1:12,digits = 2),pattern =   " ",replacement="0")
+      tiffiles<-paste(tools::file_path_sans_ext(basename(zipfile)),'_' ,numberswithzero, '.tif', sep='')
+    } else {
+      # bilfiles <- paste(var, 1:19, '_', rc, '.bil', sep='')
+      # hdrfiles <- paste(var, 1:19, '_', rc, '.hdr', sep='')
+      tiffiles<-paste(tools::file_path_sans_ext(basename(zipfile)),'_' ,1:19, '.tif', sep='')
+    }
+    theurl <- paste('http://biogeo.ucdavis.edu/data/worldclim/v2.1/base/', zip, sep='')
+  } else {
+    # example https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_10m_bio.zip
+    zip <- paste('wc2.1_', res, 'm_', var,'.zip', sep='')
+    zipfile <- paste(path, zip, sep='')
+    if (var  == 'alt') {
+      bilfiles <- paste(var, '.bil', sep='')
+      hdrfiles <- paste(var, '.hdr', sep='')
+    } else if (var  != 'bio') {
+      # bilfiles <- paste(var, 1:12, '.bil', sep='')
+      # hdrfiles <- paste(var, 1:12, '.hdr', sep='')
+      numberswithzero<-gsub(format(1:12,digits = 2),pattern =   " ",replacement="0")
+      tiffiles<-paste(tools::file_path_sans_ext(basename(zipfile)),'_' ,numberswithzero, '.tif', sep='')
+    } else {
+      # bilfiles <- paste(var, 1:19, '.bil', sep='')
+      # hdrfiles <- paste(var, 1:19, '.hdr', sep='')
+      tiffiles<-paste(tools::file_path_sans_ext(basename(zipfile)),'_' ,1:19, '.tif', sep='')
+    }
+    theurl <- paste('http://biogeo.ucdavis.edu/data/worldclim/v2.1/base/', zip, sep='')
+  }
+  # files <- c(paste(path, bilfiles, sep=''), paste(path, hdrfiles, sep=''))
+  files <- c(paste(path, tiffiles, sep=''))
+  fc <- sum(file.exists(files))
+
+
+  if ( fc < length(files) ) {
+    if (!file.exists(zipfile)) {
+      if (download) {
+        .download(theurl, zipfile)
+        if (!file.exists(zipfile))	{
+          message("\n Could not download file -- perhaps it does not exist")
+        }
+      } else {
+        message("File not available locally. Use 'download = TRUE'")
+      }
+    }
+    utils::unzip(zipfile, exdir=dirname(zipfile))
+    # dont know what this is
+    # for (h in paste(path, files, sep='')) {
+    #   x <- readLines(h)
+    #   x <- c(x[1:14], 'PIXELTYPE     SIGNEDINT', x[15:length(x)])
+    #   ?writeLines(x, h)
+    # }
+  }
+  if (var  == 'alt') {
+    st <- raster(paste(path, bilfiles, sep=''))
+  } else {
+    st <- raster::stack(paste(path, tiffiles, sep=''))
+  }
+  projection(st) <- "+proj=longlat +datum=WGS84"
+  return(st)
 }
 
 

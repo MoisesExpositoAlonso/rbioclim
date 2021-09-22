@@ -400,7 +400,7 @@ ccodes <- function() {
   if (!res %in% c(0.5, 2.5, 5, 10)) {
     stop('resolution should be one of: 0.5, 2.5, 5, 10')
   }
-  if (res==2.5) { res <- '2-5' }
+  if (res==2.5) { res <- '2.5' }
 
   stopifnot(var %in% c('tmean', 'tmin', 'tmax', 'prec', 'bio', 'elev','srad','wind','vapr'))
   path <- paste(path, 'wc2.1_', res, '/', sep='')
